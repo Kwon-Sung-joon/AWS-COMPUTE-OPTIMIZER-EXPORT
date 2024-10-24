@@ -8,18 +8,6 @@ import urllib3
 HOOK_URL=os.getenv('HOOK_URL')
 http = urllib3.PoolManager();
 
-def get_ssm_parameters_role(accountId):
-    ssm_client = boto3.client('ssm');
-    
-    IAM_ROLE_ARN=ssm_client.get_parameters(Names=[SSM_PARAMETER_NAME])['Parameters'];
-    
-    value=IAM_ROLE_ARN[0]['Value']
-    # using json.loads()
-    # convert dictionary string to dictionary
-    res = json.loads(value)
-    
-    print("IAM_ROLE_ARN : "+res[accountId])
-    return res[accountId]
 def getToken(accountId):
     SESSION_KEY={
     "aws_access_key_id":"",
@@ -65,7 +53,7 @@ def lambda_handler(event, context):
 
         for svc in compute_svc:
             try:
-                bucket_name ='tidesquare-compute-optimizer'
+                bucket_name ='<YOUR-BUCKET>'
                 response = s3_client.list_objects_v2(
                     Bucket=bucket_name,
                     Prefix=s3_key_prefix+formatted_date+'/'+svc+'/compute-optimizer/'+accountId+'/'
